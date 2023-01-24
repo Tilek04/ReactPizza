@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Route, Routes } from 'react-router-dom';
 
 import "./scss/app.scss";
@@ -12,14 +12,14 @@ import NotFound from "./Pages/NotFound";
 
 
 function App() {
-
+  const [searchValue, setSearchValue] = useState('')
   return (
     <div className="wrapper">
-      <Header />
+      <Header searchValue={searchValue} setSearchValue={setSearchValue}/>
       <div className="content">
         <div className="container">
        <Routes>
-        <Route path="/" element={<Home/>}/>
+        <Route path="/" element={<Home searchValue={searchValue}/>}/>
         <Route path="card" element={<Card/>}/>
         <Route path="*" element={<NotFound/>}/>
        </Routes>

@@ -1,0 +1,49 @@
+
+
+.input{
+    border-radius: 30px;
+    padding: 10px;
+    width: 100%;
+    border: #bbb 2px solid;
+    font-size: 17px;
+    padding-left: 40px;
+    margin-top: -10px;
+    transition: all 0.15s ease-in-out;
+    padding-right: 30px;
+
+    &:focus{
+        border: 1px solid #000;
+        width: 110%;
+        transition: all 0.15s ease-in-out;
+    }
+
+    @media(max-width: 600px){
+        width: 100%;
+        margin-bottom: 30px;
+    }
+}
+
+.search{
+    width: 20px;
+    position: relative;
+    top: 25px;
+    left: 10px;
+    cursor: pointer;
+
+}
+
+.closeIcon{
+    width: 18px;
+    height: 18px;
+    position: relative;
+    top: -30px;
+    left: 100%;
+    transition: all 0.15s ease-in-out;
+
+    &:hover{
+        cursor: pointer;
+        width: 22px;
+        height: 22px;
+        transition: all 0.15s ease-in-out;
+    }
+}
