@@ -8,8 +8,11 @@ import Sort from "../components/Sort";
 import PizzaBlock from "../components/PizzaBlock";
 import Skiliton from "../components/Skiliton";
 import Pagination from "../Pagination";
+import { useContext } from "react";
+import { searchColumn } from "../App";
 
-export const Home = ({ searchValue }) => {
+export const Home = () => {
+  const {searchValue} = useContext(searchColumn)
   const [pizzas, setPizzas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [categoryId, setCategoryId] = useState(0);

@@ -1,8 +1,11 @@
 import React from 'react'
+import { useContext } from 'react';
+import { searchColumn } from '../../App';
 
 import styles from './Search.module.scss'
 
-export const Search = ({searchValue, setSearchValue}) => {
+export const Search = () => {
+  const {searchValue, setSearchValue} = useContext(searchColumn)
     console.log(searchValue);
   return (
     <div className={styles.root}>
