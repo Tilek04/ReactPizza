@@ -2,22 +2,24 @@ import LogoSVG from "../assets/img/pizza-logo.svg";
 
 import { Link } from "react-router-dom";
 import { Search } from "./Search";
+import { useContext } from "react";
+import { searchColumn } from "../App";
 
-
-function Header({searchValue, setSearchValue}) {
+function Header() {
+  const { searchValue, setSearchValue } = useContext(searchColumn);
   return (
     <div className="header">
       <div className="container">
         <Link to="/">
-        <div className="header__logo">
-          <img width="38" src={LogoSVG} alt="Pizza logo" />
-          <div>
-            <h1>React Pizza</h1>
-            <p>самая вкусная пицца во вселенной</p>
+          <div className="header__logo">
+            <img width="38" src={LogoSVG} alt="Pizza logo" />
+            <div>
+              <h1>React Pizza</h1>
+              <p>самая вкусная пицца во вселенной</p>
+            </div>
           </div>
-        </div>
-       </Link>
-      <Search searchValue={searchValue} setSearchValue={setSearchValue}/>
+        </Link>
+        <Search searchValue={searchValue} setSearchValue={setSearchValue} />
         <div className="header__cart">
           <Link to="card" className="button button--cart">
             <span>520 ₽</span>
@@ -52,7 +54,6 @@ function Header({searchValue, setSearchValue}) {
             </svg>
             <span>3</span>
           </Link>
-          
         </div>
       </div>
     </div>
