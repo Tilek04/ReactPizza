@@ -6,6 +6,7 @@ import { setSort } from "../Redux/slices/filterSlice";
 function Sort() {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(0);
+  
   const list = [
     { name: "популярности DESK", sortProperty: "rating" },
     { name: "популярности ASK", sortProperty: "-rating" },
@@ -13,6 +14,7 @@ function Sort() {
     { name: "цене ASK", sortProperty: "-price" },
     { name: "алфавиту DESK", sortProperty: "title" },
     { name: "алфавиту ASK", sortProperty: "-title" },
+    
   ];
 
   const dispatch = useDispatch();
@@ -21,6 +23,7 @@ function Sort() {
   const onClickListItem = (obj) => {
     setOpen(false);
     dispatch(setSort(obj));
+  
   };
 
   return (

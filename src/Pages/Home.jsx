@@ -10,19 +10,20 @@ import Skiliton from "../components/Skiliton";
 import Pagination from "../Pagination";
 import { useContext } from "react";
 import { searchColumn } from "../App";
-import { setCategoryId } from "../Redux/slices/filterSlice";
+import { setCategoryId, setCurrentPage } from "../Redux/slices/filterSlice";
+import axios from "axios";
 
 export const Home = () => {
   const dispatch = useDispatch();
-  const categoryId = useSelector((state) => state.filter.categoryId);
+  const {categoryId, sort, pageCount} = useSelector((state) => state.filter.categoryId);
   const sortType = useSelector((state) => state.filter.sort.sortProperty);
 
 
   const { searchValue } = useContext(searchColumn);
   const [pizzas, setPizzas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  // const [categoryId, setCategoryId] = useState(0);
-  const [currentPage, setcurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+
 
 
   useEffect(() => {
@@ -34,15 +35,20 @@ export const Home = () => {
     // Не сработал из за MockApi
     // const search = searchValue ? `&search=${searchValue}` : " ";
 
-    fetch(
-      `https://63aaac617d7edb3ae62dc36c.mockapi.io/pizzas?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}`
-    )
-      .then((res) => res.json())
+    // fetch(
+    //   `https://63aaac617d7edb3ae62dc36c.mockapi.io/pizzas?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}`
+    // )
+    //   .then((res) => res.json())
 
-      .then((arr) => {
-        setPizzas(arr);
-        setIsLoading(false);
-      });
+    //   .then((arr) => {
+    //     setPizzas(arr);
+    //     setIsLoading(false);
+    //   });
+    axios.get(`https://63aaac617d7edb3ae62dc36c.mockapi.io/pizzas?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}`)
+    .then(res => {
+      setPizzas(res.data)
+      setIsLoading(false)
+    })
   }, [categoryId, sortType, searchValue, currentPage]);
   window.scrollTo(0, 0);
 
@@ -64,6 +70,10 @@ export const Home = () => {
     dispatch(setCategoryId(id));
   };
 
+  const onChangePage = number => {
+    dispatch(setCurrentPage(number))
+  }
+
   return (
     <>
       <div className="container">
@@ -74,7 +84,7 @@ export const Home = () => {
         </div>
         <h2 className="content__title">Все пиццы</h2>
         <div className="content__items">{isLoading ? skeletons : items}</div>
-        <Pagination onChangePagination={(namber) => setcurrentPage(namber)} />
+        <Pagination value={currentPage} onChangePagination={onChangePage} />
       </div>
     </>
   );
