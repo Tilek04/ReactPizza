@@ -2,6 +2,9 @@ import React from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSort } from "../Redux/slices/filterSlice";
+import { useRef } from "react";
+import { useEffect } from "react";
+import { includes } from "lodash";
 
 export const sortlist = [
   { name: "популярности DESK", sortProperty: "rating" },
@@ -10,13 +13,12 @@ export const sortlist = [
   { name: "цене ASK", sortProperty: "-price" },
   { name: "алфавиту DESK", sortProperty: "title" },
   { name: "алфавиту ASK", sortProperty: "-title" },
-  
 ];
+
 function Sort() {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(0);
-  
-
+  const sortRef = useRef();
 
   const dispatch = useDispatch();
   const sort = useSelector((state) => state.filter.sort);
@@ -24,11 +26,20 @@ function Sort() {
   const onClickListItem = (obj) => {
     setOpen(false);
     dispatch(setSort(obj));
-  
   };
 
+  useEffect(() => {
+    document.body.addEventListener("click", (event) => {
+      if (!event.composedPath().includes(sortRef.current)) {
+      setOpen(false);
+      
+
+      }
+    });
+  }, []);
+
   return (
-    <div className="sort">
+    <div ref={sortRef} className="sort">
       <div className="sort__label">
         <svg
           width="10"
@@ -64,6 +75,4 @@ function Sort() {
   );
 }
 
-export default Sort ;
-
-
+export default Sort;

@@ -1,9 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import qs from "qs"
+import qs from "qs";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-
 
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
@@ -12,57 +11,54 @@ import Skiliton from "../components/Skiliton";
 import Pagination from "../Pagination";
 import { useContext } from "react";
 import { searchColumn } from "../App";
-import sortlist from "../components/Sort"
-import { setCategoryId, setCurrentPage, setFilters } from "../Redux/slices/filterSlice";
+import sortlist from "../components/Sort";
+import {
+  setCategoryId,
+  setCurrentPage,
+  setFilters,
+} from "../Redux/slices/filterSlice";
 
 import axios from "axios";
 import { useRef } from "react";
 
 export const Home = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const categoryId = useSelector((state) => state.filter.categoryId);
   const sortType = useSelector((state) => state.filter.sort.sortProperty);
-  const isMounted = useRef()
-
+  const isMounted = useRef();
 
   const { searchValue } = useContext(searchColumn);
   const [pizzas, setPizzas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
- 
+  // useEffect(() => {
+  //   if(window.location.search){
+  //     const params = qs.parse(window.location.search.substring(1));
 
-// useEffect(() => {
-//   if(window.location.search){
-//     const params = qs.parse(window.location.search.substring(1));
+  //     const sort = sortlist.find((obj) => obj.sortProperty === params.sortProperty);
 
-//     const sort = sortlist.find((obj) => obj.sortProperty === params.sortProperty);
+  //     dispatch(
+  //       setFilters({
+  //         ...params,
+  //         sort
+  //       })
+  //     )
 
+  //     }
+  // },[])
 
-//     dispatch(
-//       setFilters({
-//         ...params,
-//         sort
-//       })
-//     )
-   
-
-    
-//     }
-// },[])
-
-
-useEffect(() => {
- window.scrollTo(0,0)
-},[categoryId, sortType, currentPage])
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [categoryId, sortType, currentPage]);
 
   useEffect(() => {
     setIsLoading(true);
     const sortBy = sortType.replace("-", " ");
     const order = sortType.includes("-") ? "ask" : "desk";
     const category = categoryId > 0 ? `category=${categoryId}` : " ";
-  
+
     // Не сработал из за MockApi
     // const search = searchValue ? `&search=${searchValue}` : " ";
 
@@ -75,25 +71,28 @@ useEffect(() => {
     //     setPizzas(arr);
     //     setIsLoading(false);
     //   });
-    axios.get(`https://63aaac617d7edb3ae62dc36c.mockapi.io/pizzas?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}`)
-    .then(res => {
-      setPizzas(res.data)
-      setIsLoading(false)
-    })
-  }, [categoryId, sortType,  currentPage]);
+    axios
+      .get(
+        `https://63aaac617d7edb3ae62dc36c.mockapi.io/pizzas?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}`
+      )
+      .then((res) => {
+        setPizzas(res.data);
+        setIsLoading(false);
+      });
+  }, [categoryId, sortType, currentPage]);
   window.scrollTo(0, 0);
 
   useEffect(() => {
-if(isMounted.current){
-  const queryString = qs.stringify({
-    sortType,
-    categoryId,
-    currentPage
-   })
-   navigate(`?${queryString}`)
-}
-isMounted.current = true
-  },[sortType, categoryId, currentPage])
+    if (isMounted.current) {
+      const queryString = qs.stringify({
+        sortType,
+        categoryId,
+        currentPage,
+      });
+      navigate(`?${queryString}`);
+    }
+    isMounted.current = true;
+  }, [sortType, categoryId, currentPage]);
 
   const items = pizzas
     // Статичный поиск
@@ -109,13 +108,12 @@ isMounted.current = true
   ));
 
   const onChangeCategory = (id) => {
-
     dispatch(setCategoryId(id));
   };
 
-  const onChangePage = number => {
-    dispatch(setCurrentPage(number))
-  }
+  const onChangePage = (number) => {
+    dispatch(setCurrentPage(number));
+  };
 
   return (
     <>
@@ -123,7 +121,7 @@ isMounted.current = true
         <div className="content__top">
           <Categories value={categoryId} onClickCategory={onChangeCategory} />
 
-          <Sort  />
+          <Sort />
         </div>
         <h2 className="content__title">Все пиццы</h2>
         <div className="content__items">{isLoading ? skeletons : items}</div>

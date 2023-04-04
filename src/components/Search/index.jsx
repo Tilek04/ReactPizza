@@ -9,30 +9,27 @@ import { useCallback } from "react";
 import { useState } from "react";
 
 export const Search = () => {
-  const [value, setValue] = useState()
-  const { searchValue, setSearchValue } = useContext(searchColumn);
-
-  
+  const [value, setValue] = useState();
+  const { setSearchValue } = useContext(searchColumn);
 
   const inputRef = useRef();
 
   const onClickClear = () => {
     setSearchValue("");
-    setValue('')
+    setValue("");
     inputRef.current.focus();
   };
   const updateSearchValue = useCallback(
     debounce((str) => {
-     setSearchValue(str)
-      
+      setSearchValue(str);
     }, 1000),
     []
   );
 
-  const onChangeInput = event => {
-    setValue(event.target.value)
-    updateSearchValue(event.target.value)
-  }
+  const onChangeInput = (event) => {
+    setValue(event.target.value);
+    updateSearchValue(event.target.value);
+  };
 
   return (
     <div className={styles.root}>

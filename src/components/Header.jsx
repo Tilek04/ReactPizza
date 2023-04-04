@@ -4,9 +4,13 @@ import { Link } from "react-router-dom";
 import { Search } from "./Search";
 import { useContext } from "react";
 import { searchColumn } from "../App";
+import { useSelector } from "react-redux";
 
 function Header() {
+  const { totalPrice, items } = useSelector((state) => state.card);
   const { searchValue, setSearchValue } = useContext(searchColumn);
+  const totalCard = items.reduce((sum, item) => sum + item.count, 0);
+
   return (
     <div className="header">
       <div className="container">
@@ -22,7 +26,7 @@ function Header() {
         <Search searchValue={searchValue} setSearchValue={setSearchValue} />
         <div className="header__cart">
           <Link to="card" className="button button--cart">
-            <span>520 ₽</span>
+            <span>{totalPrice} сом</span>
             <div className="button__delimiter"></div>
             <svg
               width="18"
@@ -52,7 +56,7 @@ function Header() {
                 strokeLinejoin="round"
               />
             </svg>
-            <span>3</span>
+            <span>{totalCard}</span>
           </Link>
         </div>
       </div>
