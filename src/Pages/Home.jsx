@@ -11,21 +11,18 @@ import Skiliton from "../components/Skiliton";
 import Pagination from "../Pagination";
 import { useContext } from "react";
 import { searchColumn } from "../App";
-import sortlist from "../components/Sort";
-import {
-  setCategoryId,
-  setCurrentPage,
-  setFilters,
-} from "../Redux/slices/filterSlice";
+import { setCategoryId } from "../Redux/slices/filterSlice";
 
 import axios from "axios";
 import { useRef } from "react";
+import { setItems } from "../Redux/slices/pizzaSlice";
 
 export const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const categoryId = useSelector((state) => state.filter.categoryId);
   const sortType = useSelector((state) => state.filter.sort.sortProperty);
+  const items = useSelector((state) => state.pizza.items)
   const isMounted = useRef();
 
   const { searchValue } = useContext(searchColumn);
@@ -49,9 +46,9 @@ export const Home = () => {
   //     }
   // },[])
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [categoryId, sortType, currentPage]);
+  // useEffect(() => {
+  //   window.scrollTo(0, 0);
+  // }, [categoryId, sortType, currentPage]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -71,13 +68,26 @@ export const Home = () => {
     //     setPizzas(arr);
     //     setIsLoading(false);
     //   });
+    // try {
+    //   const {data} = axios.get(
+    //     `https://63aaac617d7edb3ae62dc36c.mockapi.io/pizzas?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}`
+    //   ); dispatch(setItems(data))
+    // } catch (error) {
+    //   console.log(error, "ERROR");
+    //   alert("Ошибка Пицц")
+    // }finally{setIsLoading(false)}
     axios
       .get(
         `https://63aaac617d7edb3ae62dc36c.mockapi.io/pizzas?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}`
-      )
+      ) 
       .then((res) => {
         setPizzas(res.data);
         setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err, "error");
+        setIsLoading(false);
+        alert("error");
       });
   }, [categoryId, sortType, currentPage]);
   window.scrollTo(0, 0);
@@ -94,7 +104,7 @@ export const Home = () => {
     isMounted.current = true;
   }, [sortType, categoryId, currentPage]);
 
-  const items = pizzas
+  const filter = pizzas
     // Статичный поиск
     .filter((obj) => {
       if (obj.title.toLowerCase().includes(searchValue.toLowerCase())) {
@@ -124,7 +134,7 @@ export const Home = () => {
           <Sort />
         </div>
         <h2 className="content__title">Все пиццы</h2>
-        <div className="content__items">{isLoading ? skeletons : items}</div>
+        <div className="content__items">{isLoading ? skeletons : filter}</div>
         <Pagination value={currentPage} onChangePagination={onChangePage} />
       </div>
     </>
